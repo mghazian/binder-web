@@ -1,5 +1,5 @@
 import getPostgreInstance from "@/data/sql";
-import { setSessionCookie } from "@/util/auth";
+import { setSessionCookie } from "@/util/session";
 import { LoginInfoSchema } from "@/validators/schema/auth_info";
 import { formatZodError } from "@/validators/util";
 import { NextRequest, NextResponse } from "next/server";
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     status: 200
   });
 
-  setSessionCookie(response, `${sqlResult[0].id}`);
+  await setSessionCookie(`${sqlResult[0].id}`);
 
   return response;
 }
