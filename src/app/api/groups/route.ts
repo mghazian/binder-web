@@ -1,4 +1,5 @@
 import getPostgreInstance from "@/data/sql";
+import { decryptSessionCookie } from "@/util/session";
 import GroupSpaceSchema from "@/validators/schema/group_space";
 import { formatZodError } from "@/validators/util";
 import { headers } from "next/headers";
@@ -27,6 +28,26 @@ export async function POST(request: NextRequest) {
       id: result[0].id,
       name: name
     }
+  }, {
+    status: 200
+  });
+}
+
+export async function GET(request: NextRequest) {
+  if ( await decryptSessionCookie() === undefined ) {
+    return NextResponse.json({
+      error: "Unauthorized"
+    }, {
+      status: 401
+    });
+  }
+
+  const sql = getPostgreInstance();
+
+  const selectResult = await sql`SELECT * FROM group_spaces`;
+
+  return NextResponse.json({
+    groups: selectResult
   }, {
     status: 200
   });
