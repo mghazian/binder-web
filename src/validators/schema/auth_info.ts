@@ -12,6 +12,6 @@ const RegisterInfoSchema = z.looseObject({
   phone: z.string().regex(/^\+\d{4,16}/, "Invalid phone"),
   // TODO: Use actual validation for OTP
   otp: z.literal("123456", "Incorrect OTP")
-})
+});
 
 export { LoginInfoSchema, RegisterInfoSchema };
