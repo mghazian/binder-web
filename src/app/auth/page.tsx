@@ -3,12 +3,14 @@ import { ChangeEvent, ReactNode, useState } from "react";
 import OtpForm from "./pages/otp_form";
 import LoginForm from "./pages/login_form";
 import { SubmissionLoading } from "./pages/submission_loading";
+import { useRouter } from "next/navigation";
 
 
 export default function AuthPage(): ReactNode {
   const [ step, setStep ] = useState(0);
   const [ phone, setPhone ] = useState("");
   const [ otp, setOtp ] = useState("");
+  const router = useRouter();
 
   const submitLogin = async () => {
     try {
@@ -25,6 +27,7 @@ export default function AuthPage(): ReactNode {
       
       if ( response.ok ) {
         // Redirect to dashboard
+        router.push('/dashboard');
       } else {
         // TODO: Rethink how to handle failure? Show error message?
         console.error(response.status);
