@@ -16,6 +16,10 @@ export async function setSessionCookie(userId: string) {
   });
 }
 
+export async function removeSessionCookie() {
+  (await cookies()).delete(SESSION_KEY);
+}
+
 export async function decryptSessionCookie() {
   const sessionToken = (await cookies()).get(SESSION_KEY);
   if ( ! sessionToken ) {
