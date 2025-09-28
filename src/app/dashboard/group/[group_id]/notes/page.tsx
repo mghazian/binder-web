@@ -1,6 +1,6 @@
 'use client';
 
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { ReactNode, use, useEffect, useState } from "react";
@@ -12,14 +12,14 @@ export default function NotePage({ params }: { params: Promise<{ group_id: numbe
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:3000/api/group/${group_id}/notes`);
+      const response = await fetch(`http://localhost:3000/api/groups/${group_id}/notes`);
       if ( ! response.ok ) {
         // TODO: Handle error properly
         console.error(response.status);
         return;
       }
 
-      setNotes(await response.json());
+      setNotes((await response.json()).notes);
     })();
   }, []);
 
@@ -34,7 +34,15 @@ export default function NotePage({ params }: { params: Promise<{ group_id: numbe
     </div>
     <hr />
     <div className="flex flex-col">
-      { notes.map(v => <Link href={`/dashboard/group/${group_id}/notes/${v.id}`}>{v.name}</Link>)}
+      { notes.map(v => <Link
+          key={v.id}
+          href={`/dashboard/group/${group_id}/notes/${v.id}`}
+          className="hover:bg-blue-200 p-3 flex gap-3 items-center"
+        >
+          <FontAwesomeIcon icon={faBook} />
+          {v.title}
+        </Link>
+      ) }
     </div>
   </div>
 }
