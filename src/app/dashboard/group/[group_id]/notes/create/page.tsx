@@ -32,7 +32,7 @@ export default function NoteCreatePage({ params }: { params: Promise<{ group_id:
       ],
       body: JSON.stringify({
         title: noteTitle,
-        content: blockNote.blocksToFullHTML(noteContent)
+        content: JSON.stringify(noteContent)
       })
     });
 
