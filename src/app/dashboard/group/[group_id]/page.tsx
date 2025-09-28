@@ -7,6 +7,7 @@ import { getUser, useUserData } from "@/helpers/client_session";
 export default function GroupPage({ params }: { params: Promise<{ group_id: string | number }> }): ReactNode {
   const [ chatLog, setChatLog ] = useState<any[]>([]);
   const [ messageCompose, setMessageCompose ] = useState("");
+  const [ groupData, setGroupData ] = useState<any>(null);
   const userId = useUserData('user_id');
 
   // We are allowing message transmission by pressing enter. Unfortunately, the event handler
@@ -34,9 +35,13 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:3000/api/groups/${ group_id }/messages`);
+      const [ chatResponse, groupDetailResponse ] = await Promise.all([
+        fetch(`http://localhost:3000/api/groups/${ group_id }/messages`),
+        fetch(`http://localhost:3000/api/groups/${ group_id }`)
+      ]);
 
-      setChatLog((await response.json()).messages);
+      setChatLog((await chatResponse.json()).messages);
+      setGroupData((await groupDetailResponse.json()));
     })();
   }, [])
 
@@ -71,7 +76,10 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
 
   const messageComposerHeight = '80px';
 
-  return <div className="w-full h-full relative overflow-y-scroll text-[11pt]">
+  return <div className="w-full h-full text-[11pt] flex flex-col">
+    <div className="w-full p-2 border-b border-[#E0E0E0] bg-[#FEFEFE] h-[50px]">
+      <h1 className="text-[13pt] text-bold">{ groupData?.name }</h1>
+    </div>
     <ChatLog marginBottom={messageComposerHeight} entries={chatLog} userId={userId!} />
     <MessageComposerField height={messageComposerHeight} value={messageCompose} onChange={handleComposeChange} onSend={sendMessage} />
   </div>
