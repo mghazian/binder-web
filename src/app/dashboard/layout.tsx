@@ -25,7 +25,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }): 
     <GroupListContext.Provider value={ refreshGroupList }>
       <div id="dashboard-body" className="flex w-full grow bg-[#F8F9FA]">
         <Sidebar groups={groupList} />
-        <div className="w-full p-9">
+        <div className="w-full">
           {children}
         </div>
       </div>

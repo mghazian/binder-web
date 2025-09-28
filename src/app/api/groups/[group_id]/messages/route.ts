@@ -82,11 +82,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { message } = parseResult.data;
 
   // TODO: Catch for error
-  const insertResult = await sql`INSERT INTO messages (group_space_id, content, user_id) VALUES(${ group_id }, ${ message }, ${ jwt['id'] as number })`;
+  const insertResult = await sql`INSERT INTO messages (group_space_id, content, user_id) VALUES(${ group_id }, ${ message }, ${ jwt['id'] as number }) RETURNING *`;
 
-  return NextResponse.json({
-    message: "Message delivered successfully"
-  }, {
+  return NextResponse.json(insertResult, {
     status: 200
   });
 }

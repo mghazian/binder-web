@@ -33,7 +33,7 @@ export default function GroupCreator(): ReactNode {
     }
   }
 
-  return <div>
+  return <div className="p-9">
     <h1>Create Group</h1>
     <hr />
     <div className="flex flex-col my-7">
