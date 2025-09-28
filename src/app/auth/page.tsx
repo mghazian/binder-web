@@ -4,6 +4,7 @@ import OtpForm from "./pages/otp_form";
 import LoginForm from "./pages/login_form";
 import { SubmissionLoading } from "./pages/submission_loading";
 import { useRouter } from "next/navigation";
+import { setUser } from "@/helpers/client_session";
 
 
 export default function AuthPage(): ReactNode {
@@ -26,6 +27,8 @@ export default function AuthPage(): ReactNode {
       });
       
       if ( response.ok ) {
+        const json = await response.json();
+        setUser(json.id);
         // Redirect to dashboard
         router.push('/dashboard');
       } else {

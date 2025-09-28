@@ -1,4 +1,5 @@
 'use client';
+import { unsetUser } from "@/helpers/client_session";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
@@ -16,6 +17,7 @@ export default function Navbar(): ReactNode {
       // TODO: Handle error properly
       console.error(response.status);
     } else {
+      unsetUser();
       router.push('/auth');
     }
   }
