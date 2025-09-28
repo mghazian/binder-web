@@ -54,8 +54,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
   const { title, content } = parseResult.data;
 
-  // const insertResult = await sql`INSERT INTO notes (title, creator_id, group_space_id, content) VALUES(${ title }, ${ id as number }, ${ group_id }, ${ content })`;
-  // TODO: update
+  const updateResult = await sql`UPDATE notes SET title = ${ title }, content = ${ content }, updated_at = NOW() WHERE id = ${ note_id }`;
 
   // TODO: Catch error accordingly
   return NextResponse.json({
