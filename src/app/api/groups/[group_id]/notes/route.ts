@@ -27,7 +27,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   });
 }
 
-export async function POST(request: NextRequest, { params }: { params: Promise<{ group_id: number }>}) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ group_id: number }>}) {
   const jwt = await decryptSessionCookie();
   if ( jwt === undefined ) {
     return NextResponse.json({

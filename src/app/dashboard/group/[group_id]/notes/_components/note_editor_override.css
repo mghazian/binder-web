@@ -1,0 +1,5 @@
+.bn-container {
+  --bn-colors-editor-text: inherit;
+  --bn-colors-editor-background: inherit;
+  --bn-colors-side-menu: #a0a0a0;
+}
