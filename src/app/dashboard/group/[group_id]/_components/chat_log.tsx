@@ -6,7 +6,7 @@ import MessageEntry from "./message_entry";
 // TODO: entries save user id as string. Better use type to enforce object's key type
 export default function ChatLog({ marginBottom, entries, userId }: { marginBottom: string, entries: any[], userId: string }): ReactNode {
   // TODO: Format chat date and time
-  return <div className={`p-9 flex flex-col pb-[${ marginBottom }] `}>
+  return <div className={`p-9 flex flex-col pb-[${ marginBottom }] h-full`}>
     {entries.map(v => <MessageEntry
       key={v.id}
       time={v.created_at}

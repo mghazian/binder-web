@@ -71,7 +71,7 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
 
   const messageComposerHeight = '80px';
 
-  return <div className="w-full relative text-[11pt]">
+  return <div className="w-full h-full relative overflow-y-scroll text-[11pt]">
     <ChatLog marginBottom={messageComposerHeight} entries={chatLog} userId={userId!} />
     <MessageComposerField height={messageComposerHeight} value={messageCompose} onChange={handleComposeChange} onSend={sendMessage} />
   </div>

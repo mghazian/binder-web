@@ -25,11 +25,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }): 
   return <div className="flex flex-col h-screen">
     <Navbar height={navbarHeight} />
     <GroupListContext.Provider value={ refreshGroupList }>
-      <div id="dashboard-body" className={`flex w-full grow bg-[#F8F9FA]`} style={{ height: `calc(100vh - ${ navbarHeight })` }}>
+      <div id="dashboard-body" className={`flex w-full grow bg-[#F8F9FA]`} style={{ height: `calc(100vh - ${ navbarHeight })`, minHeight: `calc(100vh - ${ navbarHeight })` }}>
         <Sidebar groups={groupList} />
-        <div className="w-full overflow-y-scroll">
-          {children}
-        </div>
+        {children}
       </div>
     </GroupListContext.Provider>
   </div>
