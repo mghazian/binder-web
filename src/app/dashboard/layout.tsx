@@ -1,7 +1,7 @@
 'use client';
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
-import Sidebar from "./components/sidebar";
-import Navbar from "./components/navbar";
+import Sidebar from "./_components/sidebar";
+import Navbar from "./_components/navbar";
 import { GroupListContext } from "./_contexts/group_list";
 
 export default function DashboardLayout({ children }: { children: ReactNode }): ReactNode {
