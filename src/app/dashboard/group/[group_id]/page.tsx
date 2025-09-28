@@ -3,6 +3,7 @@ import { ChangeEvent, ReactNode, use, useEffect, useRef, useState } from "react"
 import ChatLog from "./_components/chat_log";
 import MessageComposerField from "./_components/message_composer";
 import { getUser, useUserData } from "@/helpers/client_session";
+import Link from "next/link";
 
 export default function GroupPage({ params }: { params: Promise<{ group_id: string | number }> }): ReactNode {
   const [ chatLog, setChatLog ] = useState<any[]>([]);
@@ -76,11 +77,8 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
 
   const messageComposerHeight = '80px';
 
-  return <div className="w-full h-full text-[11pt] flex flex-col">
-    <div className="w-full p-2 border-b border-[#E0E0E0] bg-[#FEFEFE] h-[50px]">
-      <h1 className="text-[13pt] text-bold">{ groupData?.name }</h1>
-    </div>
+  return <>
     <ChatLog marginBottom={messageComposerHeight} entries={chatLog} userId={userId!} />
     <MessageComposerField height={messageComposerHeight} value={messageCompose} onChange={handleComposeChange} onSend={sendMessage} />
-  </div>
+  </>
 }

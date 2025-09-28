@@ -34,14 +34,15 @@ export default function NotePage({ params }: { params: Promise<{ group_id: numbe
     </div>
     <hr />
     <div className="flex flex-col">
-      { notes.map(v => <Link
-          key={v.id}
-          href={`/dashboard/group/${group_id}/notes/${v.id}`}
-          className="hover:bg-blue-200 p-3 flex gap-3 items-center"
-        >
-          <FontAwesomeIcon icon={faBook} />
-          {v.title}
-        </Link>
+      { notes.map(v => <div key={v.id} className="flex justify-between h-[50px] items-center">
+          <Link className="flex block gap-3 items-center h-full px-6 hover:text-blue-500" href={`/dashboard/group/${group_id}/notes/${v.id}`}>
+            <FontAwesomeIcon icon={faBook} />
+            {v.title}
+          </Link>
+          <Link className="mr-5 bg-blue-500 hover:bg-blue-400 text-white rounded-sm px-3 py-1" href={`/dashboard/group/${group_id}/notes/${v.id}/editor`}>
+            Ubah
+          </Link>
+        </div>
       ) }
     </div>
   </div>
