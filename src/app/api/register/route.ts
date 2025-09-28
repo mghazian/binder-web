@@ -23,7 +23,6 @@ export async function POST(request: NextRequest) {
   // TODO: Adjust. No need to set the user detail for security reason
   const response = NextResponse.json({
     name: json.name,
-    phone: json.phone,
     id: insertResult[0].id,
   }, {
     status: 200,
