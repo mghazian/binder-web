@@ -34,6 +34,7 @@ create table if not exists notes (
     id bigserial primary key,
     creator_id bigint references users(id) on update cascade on delete set null,
     group_space_id bigint references group_spaces(id) on update cascade on delete cascade,
+    title varchar,
     content varchar,
 
     created_at timestamp default current_timestamp,

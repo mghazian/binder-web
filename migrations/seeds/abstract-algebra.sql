@@ -3,10 +3,10 @@ insert into users (id, name, phone, password) values
 (1000001, 'Ron', '+621122112211', '[redacted]'),
 (1000002, 'Jackson', '+621133113311', '[redacted]');
 
-insert into groups (id, name, creator_id) values
+insert into group_spaces (id, name, creator_id) values
 (1000000, 'Abstract Algebra Study Group', 1000000);
 
-INSERT INTO messages (group_id, user_id, content) VALUES
+INSERT INTO messages (group_space_id, user_id, content) VALUES
 (1000000, 1000000, 'bruh this abstract algebra homework is actual torture'),
 (1000000, 1000001, 'omg tell me about it'),
 (1000000, 1000002, 'i''m so lost on problem 3'),
