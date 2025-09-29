@@ -1,0 +1,22 @@
+meta {
+  name: Login
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/api/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "phone": "+6212341234",
+    "otp": "123456"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,22 @@
+meta {
+  name: Create note
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{BASE_URL}}/api/groups/{{GROUP_ID}}/notes
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Lorem",
+    "content": "Lorem ipsum dolor sit amet"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

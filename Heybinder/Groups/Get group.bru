@@ -1,0 +1,15 @@
+meta {
+  name: Get group
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/api/groups/1000000
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

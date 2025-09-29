@@ -1,0 +1,15 @@
+meta {
+  name: Get all notes
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/api/groups/{{GROUP_ID}}/notes
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
