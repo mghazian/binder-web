@@ -5,8 +5,8 @@ const getPostgreInstance = (() => {
 
   return function () {
     if ( instance === null ) {
-      // TODO: Move values to env or secrets
-      instance = postgres('postgresql://localhost:35432/heybinder', { ssl: false, user: 'app', pass: 'app' });
+      const { POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD } = process.env;
+      instance = postgres(POSTGRES_URL!, { ssl: false, user: POSTGRES_USER, pass: POSTGRES_PASSWORD });
     }
 
     return instance;
