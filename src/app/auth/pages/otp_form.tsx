@@ -1,7 +1,10 @@
 import { ChangeEvent } from "react";
 
-
-export default function OtpForm({ onAdvance, onOtpChange }: { onAdvance?: Function, onOtpChange?: Function }) {
+type OtpFormParam = {
+  onAdvance: () => void,
+  onOtpChange: (value: string) => void
+}
+export default function OtpForm({ onAdvance, onOtpChange }: OtpFormParam) {
   const handleClick = () => {
     if ( onAdvance ) {
       onAdvance();

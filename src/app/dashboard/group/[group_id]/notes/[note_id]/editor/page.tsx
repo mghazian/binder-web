@@ -5,7 +5,7 @@ import { ChangeEvent, ReactNode, use, useEffect, useState } from "react";
 import EditorPageTemplate from "../../_templates/editor_page";
 import { useRouter } from "next/navigation";
 
-export default function EditorPage({ params }: { params: Promise<{ group_id: number, note_id: number }>}): ReactNode {
+export default function EditorPage({ params }: { params: Promise<{ group_id: string, note_id: string }>}): ReactNode {
   const [ noteTitle, setNoteTitle ] = useState("");
   const [ noteContent, setNoteContent ] = useState<any>();
   const [ isLoading, setIsLoading ] = useState(true);
@@ -58,7 +58,7 @@ export default function EditorPage({ params }: { params: Promise<{ group_id: num
       setNoteContent(note.content);
       setIsLoading(false);
     })()
-  }, [])
+  }, [ group_id, note_id ])
 
   return <>
     {isLoading ? "" : <EditorPageTemplate

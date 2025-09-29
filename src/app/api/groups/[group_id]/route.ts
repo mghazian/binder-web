@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ group_id: number }>} ) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ group_id: string }>} ) {
   if ( await decryptSessionCookie() === undefined ) {
     return NextResponse.json({
       error: "Unauthorized"

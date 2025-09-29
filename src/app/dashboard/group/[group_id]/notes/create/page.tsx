@@ -5,7 +5,7 @@ import { BlockNoteEditor } from "@blocknote/core";
 import { useRouter } from "next/navigation";
 import EditorPageTemplate from "../_templates/editor_page";
 
-export default function NoteCreatePage({ params }: { params: Promise<{ group_id: number}> }): ReactNode {
+export default function NoteCreatePage({ params }: { params: Promise<{ group_id: string }> }): ReactNode {
   const [ noteTitle, setNoteTitle ] = useState("Tanpa Judul: Note Baru");
   const [ noteContent, setNoteContent ] = useState<any>();
 

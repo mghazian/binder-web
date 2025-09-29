@@ -1,5 +1,5 @@
 'use client';
-import { ChangeEvent, ReactNode, use, useEffect, useRef, useState } from "react";
+import { ChangeEvent, ReactNode, use, useCallback, useEffect, useRef, useState } from "react";
 import MessageComposerField from "./_components/message_composer";
 import { getUser, useUserData } from "@/helpers/client_session";
 import MessageEntry from "./_components/message_entry";
@@ -16,56 +16,17 @@ const throttle = (callback: () => void, interval: number) => {
   }
 }
 
-export default function GroupPage({ params }: { params: Promise<{ group_id: string | number }> }): ReactNode {
+export default function GroupPage({ params }: { params: Promise<{ group_id: string }> }): ReactNode {
   const [ chatLog, setChatLog ] = useState<any[]>([]);
   const [ messageCompose, setMessageCompose ] = useState("");
   const [ groupData, setGroupData ] = useState<any>(null);
   const userId = useUserData('user_id');
 
   const MESSAGE_BATCH_SIZE = 12;
-
-  // Feature: Send message by pressing enter
-  //
-  // We are allowing message transmission by pressing enter. Unfortunately, the event handler
-  // does not propagate cross render, so we need something to make the message can be read
-  // by the event handler cross render. Therefore introducing: useRef
-  const messageComposeRef = useRef(messageCompose);
-  useEffect(() => {
-    messageComposeRef.current = messageCompose;
-  }, [messageCompose])
-
   const { group_id } = use(params);
 
-  useEffect(() => {
-    // Register enter button listener
-    const handler = (e: KeyboardEvent) => {
-      if ( e.key === 'Enter' && !messageCompose ) {
-        sendMessage();
-      }
-    }
-
-    window.addEventListener('keydown', handler);
-
-    return () => window.removeEventListener('keydown', handler);
-  }, []);
-  // ------
-
-  // Initialization - Load all data at first render
-  useEffect(() => {
-    (async () => {
-      const [ chatResponse, groupDetailResponse ] = await Promise.all([
-        fetch(`http://localhost:3000/api/groups/${ group_id }/messages?limit=${ MESSAGE_BATCH_SIZE }`),
-        fetch(`http://localhost:3000/api/groups/${ group_id }`)
-      ]);
-
-      setChatLog((await chatResponse.json()).messages);
-      setGroupData((await groupDetailResponse.json()));
-    })();
-  }, [])
-  // -----
-
   // Method and helper definitions
-  const sendMessage = async () => {
+  const sendMessage = useCallback(async () => {
     const response = await fetch(`http://localhost:3000/api/groups/${ group_id }/messages`, {
       method: 'POST',
       headers: [
@@ -88,7 +49,7 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
     setChatLog(logs => {
       return [ ...logs, ...json ]
     })
-  }
+  }, [ group_id ]);
 
   const handleComposeChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessageCompose(e.currentTarget.value);
@@ -96,6 +57,44 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
 
   const messageComposerHeight = '80px';
   // ------
+
+  // Feature: Send message by pressing enter
+  //
+  // We are allowing message transmission by pressing enter. Unfortunately, the event handler
+  // does not propagate cross render, so we need something to make the message can be read
+  // by the event handler cross render. Therefore introducing: useRef
+  const messageComposeRef = useRef(messageCompose);
+  useEffect(() => {
+    messageComposeRef.current = messageCompose;
+  }, [messageCompose])
+
+  useEffect(() => {
+    // Register enter button listener
+    const handler = (e: KeyboardEvent) => {
+      if ( e.key === 'Enter' && messageComposeRef.current ) {
+        sendMessage();
+      }
+    }
+
+    window.addEventListener('keydown', handler);
+
+    return () => window.removeEventListener('keydown', handler);
+  }, [messageComposeRef, sendMessage]);
+  // ------
+
+  // Initialization - Load all data at first render
+  useEffect(() => {
+    (async () => {
+      const [ chatResponse, groupDetailResponse ] = await Promise.all([
+        fetch(`http://localhost:3000/api/groups/${ group_id }/messages?limit=${ MESSAGE_BATCH_SIZE }`),
+        fetch(`http://localhost:3000/api/groups/${ group_id }`)
+      ]);
+
+      setChatLog((await chatResponse.json()).messages);
+      setGroupData((await groupDetailResponse.json()));
+    })();
+  }, [group_id])
+  // -----
 
   // Feature: Load message when user scrolled to top
   //
@@ -111,7 +110,7 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
     window.scrollTo(previousFirstMessage)
   }, [chatLog]);
 
-  const loadMessage = async (type: "after" | "before", count: number = MESSAGE_BATCH_SIZE, chatLog: any[]) => {
+  const loadMessage = useCallback(async (type: "after" | "before", count: number = MESSAGE_BATCH_SIZE, chatLog: any[]) => {
     const url = new URL(`http://localhost:3000/api/groups/${ group_id }/messages`);
 
     let chatEntryIndex = undefined
@@ -135,14 +134,15 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
         return [ ...logs, ...json.messages ];
       }
     });
-  }
+  }, [ group_id ]);
 
   useEffect(() => {
     let currentPromise: Promise<any> | null = null;
+    const scrollAwareElementCopy = scrollAwareElement;
     
     // Keep performance in check by not triggering the call multiple times
     const handler = throttle(() => {
-      if ( scrollAwareElement.current?.scrollTop === 0 ) {
+      if ( scrollAwareElementCopy.current?.scrollTop === 0 ) {
         if ( currentPromise !== null ) {
           return
         }
@@ -154,24 +154,24 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
           });
       }
     }, 1000);
-    scrollAwareElement.current?.addEventListener('scroll', handler);
+    scrollAwareElementCopy.current?.addEventListener('scroll', handler);
 
     return () => {
-      scrollAwareElement.current?.removeEventListener('scroll', handler);
+      scrollAwareElementCopy.current?.removeEventListener('scroll', handler);
     }
-  }, [scrollAwareElement]);
+  }, [loadMessage, scrollAwareElement]);
   // -------
 
   const POLL_INTERVAL = 5000;
   useEffect(() => {
-    let id = setInterval(() => {
+    const id = setInterval(() => {
       (async () => {
         loadMessage('after', MESSAGE_BATCH_SIZE, chatLogRef.current)
       })();
     }, POLL_INTERVAL);
 
     return () => clearInterval(id);
-  }, [])
+  }, [ loadMessage ])
 
   // TODO: Format chat date and time
   return <>

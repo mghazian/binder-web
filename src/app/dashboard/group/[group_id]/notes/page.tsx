@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ReactNode, use, useEffect, useState } from "react";
 
 
-export default function NotePage({ params }: { params: Promise<{ group_id: number }> }): ReactNode {
+export default function NotePage({ params }: { params: Promise<{ group_id: string }> }): ReactNode {
   const [ notes, setNotes ] = useState<any[]>([]);
   const { group_id } = use(params);
 
@@ -21,7 +21,7 @@ export default function NotePage({ params }: { params: Promise<{ group_id: numbe
 
       setNotes((await response.json()).notes);
     })();
-  }, []);
+  }, [ group_id ]);
 
 
   return <div className="w-full h-full p-9">

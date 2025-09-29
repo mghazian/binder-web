@@ -3,17 +3,17 @@
 import { ChangeEvent, ReactNode, use, useEffect, useRef, useState } from "react";
 import { useCreateBlockNote } from "@blocknote/react";
 
-export default function NoteViewerPage({ params }: { params: Promise<{ group_id: number, note_id: number }> }): ReactNode {
+export default function NoteViewerPage({ params }: { params: Promise<{ group_id: string, note_id: string }> }): ReactNode {
   const [ note, setNote ] = useState<any>(null);
 
-  let blockNote = null;
-  try {
-    // TODO: Need relook: using `useCreateBlockNote` caused error under the hood. Is
-    // it better to not convert block document on the fly?
-    blockNote = useCreateBlockNote();
-  } catch (err) {
-    // Swallow the error
-  }
+  const blockNote = useCreateBlockNote();
+  // try {
+  //   // TODO: Need relook: using `useCreateBlockNote` caused error under the hood. Is
+  //   // it better to not convert block document on the fly?
+  //   blockNote = useCreateBlockNote();
+  // } catch (err) {
+  //   // Swallow the error
+  // }
 
   const { group_id, note_id } = use(params);
 
@@ -28,7 +28,7 @@ export default function NoteViewerPage({ params }: { params: Promise<{ group_id:
 
       setNote((await response.json()).note);
     })();
-  }, []);
+  }, [ group_id, note_id ]);
 
   return <div className="w-full h-full flex flex-col items-center">
     <div className="w-full p-2 border-b border-[#E0E0E0] bg-[#FEFEFE] h-[50px]">

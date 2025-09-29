@@ -3,7 +3,7 @@ import { ChangeEvent, ReactNode, use, useEffect, useRef, useState } from "react"
 import { getUser, useUserData } from "@/helpers/client_session";
 import Link from "next/link";
 
-export default function GroupLayout({ children, params }: { children: ReactNode, params: Promise<{ group_id: number }> }): ReactNode {
+export default function GroupLayout({ children, params }: { children: ReactNode, params: Promise<{ group_id: string }> }): ReactNode {
   const [ groupData, setGroupData ] = useState<any>(null);
   const userId = useUserData('user_id');
 
@@ -15,7 +15,7 @@ export default function GroupLayout({ children, params }: { children: ReactNode,
 
       setGroupData((await groupDetailResponse.json()));
     })();
-  }, [])
+  }, [ group_id ])
 
   return <div className="w-full h-full text-[11pt] flex flex-col">
     <div className="w-full p-2 border-b border-[#E0E0E0] bg-[#FEFEFE] h-[50px] flex justify-between items-center">

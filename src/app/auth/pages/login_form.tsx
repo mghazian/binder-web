@@ -1,8 +1,11 @@
 'use client';
 import { ChangeEvent, ReactNode, useState } from "react";
 
-
-export default function LoginForm({ onAdvance, onPhoneChange }: { onAdvance?: Function, onPhoneChange?: Function }): ReactNode {
+type LoginFormParam = {
+  onAdvance: () => void,
+  onPhoneChange: (value: string) => void
+}
+export default function LoginForm({ onAdvance, onPhoneChange }: LoginFormParam): ReactNode {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if ( onPhoneChange ) {
       onPhoneChange(e.currentTarget.value);

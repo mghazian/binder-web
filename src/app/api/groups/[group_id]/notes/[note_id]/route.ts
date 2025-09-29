@@ -5,7 +5,7 @@ import { formatZodError } from "@/validators/util";
 import { NextRequest, NextResponse } from "next/server";
 
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ group_id: number, note_id: number }>}) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ group_id: string, note_id: string }>}) {
   if ( await decryptSessionCookie() === undefined ) {
     return NextResponse.json({
       error: "Unauthorized"
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     });
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ group_id: number, note_id: number }>}) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ group_id: string, note_id: string }>}) {
   const jwt = await decryptSessionCookie();
   if ( jwt === undefined ) {
     return NextResponse.json({

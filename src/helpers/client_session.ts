@@ -19,7 +19,7 @@ export const useUserData = (key: string) => {
 
   useEffect(() => {
     setValue(sessionStorage.getItem(key));
-  }, [])
+  }, [ key ])
 
   return value;
 }
