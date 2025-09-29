@@ -1,7 +1,5 @@
 'use client';
 import { ChangeEvent, ReactNode, use, useEffect, useRef, useState } from "react";
-import ChatLog from "./_components/chat_log";
-import MessageComposerField from "./_components/message_composer";
 import { getUser, useUserData } from "@/helpers/client_session";
 import Link from "next/link";
 
