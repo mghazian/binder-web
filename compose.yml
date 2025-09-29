@@ -1,0 +1,25 @@
+services:
+  db:
+    image: public.ecr.aws/docker/library/postgres:16-alpine
+    container_name: heybinder-db
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: heybinder
+    volume:
+      - db_data:/var/lib/postgresql/data
+  app:
+    build: { context: . }
+    user: 0
+    container_Name: heybinder-app
+    ports: ['3000:3000']
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_URL: postgresql://db:5432/heybinder
+    depends_on:
+      - db
+
+volumes:
+  db_data:
