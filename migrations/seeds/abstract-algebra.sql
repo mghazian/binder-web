@@ -55,24 +55,3 @@ INSERT INTO messages (group_id, user_id, content) VALUES
 (1000000, 1000001, 'i''ll be there'),
 (1000000, 1000000, 'don''t forget the snacks'),
 (1000000, 1000001, 'never');
-
-insert into notes (creator_id, content) values (
-    1000002,
-    '### Group Theory: First Theorems
-
-    **Lagrange\'s Theorem**
-    * This is a fundamental theorem in finite group theory.
-    * It states that for any finite group $G$, the order (the number of elements) of any subgroup $H$ of $G$ must divide the order of $G$.
-    * This has a really important consequence: if you have a group with a prime number of elements, it must be a cyclic group.
-
-    **Cayley\'s Theorem**
-    * Named after the mathematician Arthur Cayley.
-    * It states that every group $G$ is isomorphic to a subgroup of the symmetric group on $G$.
-    * What this means in plain English is that you can always represent any group as a group of permutations.
-    * Great because allows us to study abstract groups by looking at more concrete objects (permutations).
-
-    **The Isomorphism Theorems**
-    * There are three main isomorphism theorems, and they relate quotient groups, homomorphisms, and subgroups.
-    * The **First Isomorphism Theorem** is probably the most used one. It says that if you have a homomorphism (a structure-preserving map) $f$ from a group $G$ to a group $H$, then the quotient group $G$ divided by the kernel of $f$ is isomorphic to the image of $f$.
-    * Kernel is set of elements that map to the identity.'
-);
