@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Binder Application But Web!
+
+This is a prototype port of Binder application, but instead built for mobile devices, this project runs on browser.
 
 ## Getting Started
 
-First, run the development server:
+> Make sure `podman` and `node` has been installed already.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Open the `.env` file and fill it accordingly. For example,
+```env
+POSTGRES_USER=app
+POSTGRES_PASSWORD=app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Run `podman-compose --env-file .env up`
+3. Run the migration. Normally it should be done by e.g. `psql`, but this project offers an endpoint to run the migration and seeding as well:
+```sh
+curl -X POST http://localhost:3000/api/migrations
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Verify the app is accessible at http://localhost:3000. A login page should appear by now.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Demo Account
 
-## Learn More
+When the migration and the seed is executed, the following account can be used:
 
-To learn more about Next.js, take a look at the following resources:
+|Phone|OTP|Name|
+|---|--|--|
+|+621100110011|123456|Ted|
+|+621122112211|123456|Ron|
+|+621133113311|123456|Jackson|
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Known Caveat
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Registration is not usable. So registration should be done by hitting the following endpoint directly
+  ```sh
+  curl --request POST \
+  --url http://localhost:3000/api/register \
+  --header 'content-type: application/json' \
+  --data '{
+    "phone": "+6212341234",
+    "otp": "123456",
+    "name": "bono"
+  }'
+  ```
+- Automated redirection when logged out is not implemented. When the app does not look responsive, try to login again. Visit http://localhost:3000/auth
 
-## Deploy on Vercel
+## Related document
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [API contract](./docs/api.md)
+- [Design document](./docs/overview.md)
