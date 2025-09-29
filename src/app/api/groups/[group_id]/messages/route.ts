@@ -37,9 +37,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   
   if ( id !== undefined ) {
     if ( type === 'after' ) {
-      cursorClause = sql`and id > ${ id }`;
+      cursorClause = sql`and messages.id > ${ id }`;
     } else {
-      cursorClause = sql`and id < ${ id }`;
+      cursorClause = sql`and messages.id < ${ id }`;
     }
   }
   
@@ -48,7 +48,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     orderDirection = sql`DESC`;
   }
 
-  const selectResult = await sql`SELECT * FROM messages WHERE group_space_id = ${ group_id } ${ cursorClause } ORDER BY id ${ orderDirection } LIMIT ${ limit }`;
+  const selectResult = await sql`SELECT messages.*, users.name
+    FROM messages
+    JOIN users ON messages.user_id = users.id
+    WHERE group_space_id = ${ group_id } ${ cursorClause }
+    ORDER BY messages.id ${ orderDirection }
+    LIMIT ${ limit }`;
 
   return NextResponse.json({
     messages: (type === 'before') ? selectResult.reverse() : selectResult // Make sure message is returned ascendingly

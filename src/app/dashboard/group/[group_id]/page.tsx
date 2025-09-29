@@ -157,7 +157,7 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
         key={v.id}
         time={v.created_at}
         name={v.name}
-        isSpeaker={v.user_id === userId ? "true" : "false"}
+        isSpeaker={v.user_id == userId}
       >
         {v.content}
       </MessageEntry>)}
