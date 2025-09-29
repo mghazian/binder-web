@@ -99,24 +99,36 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
     window.scrollTo(previousFirstMessage)
   }, [chatLog]);
 
-  const loadPreviousMessage = async (count: number = MESSAGE_BATCH_SIZE, chatLog: any[]) => {
+  const loadMessage = async (type: "after" | "before", count: number = MESSAGE_BATCH_SIZE, chatLog: any[]) => {
     const url = new URL(`http://localhost:3000/api/groups/${ group_id }/messages`);
-    url.searchParams.set('id', chatLog.length > 0 ? chatLog[0].id.toString() : "");
-    url.searchParams.set('type', "before");
+
+    let chatEntryIndex = undefined
+    if ( type === 'before' ) {
+      chatEntryIndex = 0;
+    }
+    else {
+      chatEntryIndex = chatLog.length - 1;
+    }
+    url.searchParams.set('id', chatLog.length > 0 ? chatLog[ chatEntryIndex ].id.toString() : "");
+    url.searchParams.set('type', type);
     url.searchParams.set('limit', count.toString());
 
     const response = await fetch(url);
     const json = await response.json();
 
     setChatLog(logs => {
-      return [ ...json.messages, ...logs ];
+      if ( type === 'before' ) {
+        return [ ...json.messages, ...logs ];
+      } else {
+        return [ ...logs, ...json.messages ];
+      }
     });
   }
 
   useEffect(() => {
     const handler = () => {
       if ( scrollAwareElement.current?.scrollTop === 0 ) {
-        loadPreviousMessage(MESSAGE_BATCH_SIZE, chatLogRef.current);
+        loadMessage("before", MESSAGE_BATCH_SIZE, chatLogRef.current);
       }
     }
     scrollAwareElement.current?.addEventListener('scroll', handler);
@@ -126,6 +138,17 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
     }
   }, [scrollAwareElement]);
   // -------
+
+  const POLL_INTERVAL = 5000;
+  useEffect(() => {
+    let id = setInterval(() => {
+      (async () => {
+        loadMessage('after', MESSAGE_BATCH_SIZE, chatLogRef.current)
+      })();
+    }, POLL_INTERVAL);
+
+    return () => clearInterval(id);
+  }, [])
 
   // TODO: Format chat date and time
   return <>
