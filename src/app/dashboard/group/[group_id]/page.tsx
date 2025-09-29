@@ -4,6 +4,18 @@ import MessageComposerField from "./_components/message_composer";
 import { getUser, useUserData } from "@/helpers/client_session";
 import MessageEntry from "./_components/message_entry";
 
+const throttle = (callback: () => void, interval: number) => {
+  let id: NodeJS.Timeout | null = null;
+  return () => {
+    if ( id === null ) {
+      id = setTimeout(() => {
+        callback();
+        id = null;
+      }, interval);
+    }
+  }
+}
+
 export default function GroupPage({ params }: { params: Promise<{ group_id: string | number }> }): ReactNode {
   const [ chatLog, setChatLog ] = useState<any[]>([]);
   const [ messageCompose, setMessageCompose ] = useState("");
@@ -126,11 +138,22 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
   }
 
   useEffect(() => {
-    const handler = () => {
+    let currentPromise: Promise<any> | null = null;
+    
+    // Keep performance in check by not triggering the call multiple times
+    const handler = throttle(() => {
       if ( scrollAwareElement.current?.scrollTop === 0 ) {
-        loadMessage("before", MESSAGE_BATCH_SIZE, chatLogRef.current);
+        if ( currentPromise !== null ) {
+          return
+        }
+
+        // Prevent multiple API call if current one has not finished
+        currentPromise = loadMessage("before", MESSAGE_BATCH_SIZE, chatLogRef.current)
+          .finally(() => {
+            currentPromise = null;
+          });
       }
-    }
+    }, 1000);
     scrollAwareElement.current?.addEventListener('scroll', handler);
 
     return () => {
