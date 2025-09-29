@@ -11,7 +11,7 @@ export function getUser() {
 }
 
 export function unsetUser() {
-  sessionStorage.unsetItem('user_id');
+  sessionStorage.removeItem('user_id');
 }
 
 export const useUserData = (key: string) => {
