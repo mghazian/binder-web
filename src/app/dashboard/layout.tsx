@@ -3,12 +3,13 @@ import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState
 import Sidebar from "./_components/sidebar";
 import Navbar from "./_components/navbar";
 import { GroupListContext } from "./_contexts/group_list";
+import { getBaseUrl } from "@/helpers/base_url";
 
 export default function DashboardLayout({ children }: { children: ReactNode }): ReactNode {
 
   const [ groupList, setGroupList ] = useState<any[]>([]);
   const refreshGroupList = async () => {
-    const response = await fetch('http://localhost:3000/api/groups');
+    const response = await fetch(`${getBaseUrl()}/api/groups`);
 
     const json = await response.json();
 

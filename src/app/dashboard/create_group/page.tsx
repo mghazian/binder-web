@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ChangeEvent, ReactNode, useContext, useState } from "react";
 import { GroupListContext } from "../_contexts/group_list";
+import { getBaseUrl } from "@/helpers/base_url";
 
 export default function GroupCreator(): ReactNode {
   const [ name, setName ] = useState("");
@@ -14,7 +15,7 @@ export default function GroupCreator(): ReactNode {
   }
 
   const onSubmit = async () => {
-    const response = await fetch('http://localhost:3000/api/groups/', {
+    const response = await fetch(`${getBaseUrl()}/api/groups/`, {
       method: 'POST',
       headers: [
         ['Content-Type', 'application/json']

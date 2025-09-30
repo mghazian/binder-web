@@ -2,6 +2,7 @@
 import { ChangeEvent, ReactNode, use, useEffect, useRef, useState } from "react";
 import { getUser, useUserData } from "@/helpers/client_session";
 import Link from "next/link";
+import { getBaseUrl } from "@/helpers/base_url";
 
 export default function GroupLayout({ children, params }: { children: ReactNode, params: Promise<{ group_id: string }> }): ReactNode {
   const [ groupData, setGroupData ] = useState<any>(null);
@@ -11,7 +12,7 @@ export default function GroupLayout({ children, params }: { children: ReactNode,
 
   useEffect(() => {
     (async () => {
-      const groupDetailResponse = await fetch(`http://localhost:3000/api/groups/${ group_id }`);
+      const groupDetailResponse = await fetch(`${getBaseUrl()}/api/groups/${ group_id }`);
 
       setGroupData((await groupDetailResponse.json()));
     })();

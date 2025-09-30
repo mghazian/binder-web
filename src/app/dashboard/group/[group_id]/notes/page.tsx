@@ -1,5 +1,6 @@
 'use client';
 
+import { getBaseUrl } from "@/helpers/base_url";
 import { faBook, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -12,7 +13,7 @@ export default function NotePage({ params }: { params: Promise<{ group_id: strin
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:3000/api/groups/${group_id}/notes`);
+      const response = await fetch(`${getBaseUrl()}/api/groups/${group_id}/notes`);
       if ( ! response.ok ) {
         // TODO: Handle error properly
         console.error(response.status);

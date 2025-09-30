@@ -5,6 +5,7 @@ import LoginForm from "./pages/login_form";
 import { SubmissionLoading } from "./pages/submission_loading";
 import { useRouter } from "next/navigation";
 import { setUser } from "@/helpers/client_session";
+import { getBaseUrl } from "@/helpers/base_url";
 
 
 export default function AuthPage(): ReactNode {
@@ -15,7 +16,7 @@ export default function AuthPage(): ReactNode {
 
   const submitLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/login', {
+      const response = await fetch(`${getBaseUrl()}/api/login`, {
         method: 'POST',
         headers: [
           ['Content-Type', 'application/json']

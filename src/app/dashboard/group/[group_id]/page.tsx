@@ -3,6 +3,7 @@ import { ChangeEvent, ReactNode, use, useCallback, useEffect, useRef, useState }
 import MessageComposerField from "./_components/message_composer";
 import { getUser, useUserData } from "@/helpers/client_session";
 import MessageEntry from "./_components/message_entry";
+import { getBaseUrl } from "@/helpers/base_url";
 
 const throttle = (callback: () => void, interval: number) => {
   let id: NodeJS.Timeout | null = null;
@@ -27,7 +28,7 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
 
   // Method and helper definitions
   const sendMessage = useCallback(async () => {
-    const response = await fetch(`http://localhost:3000/api/groups/${ group_id }/messages`, {
+    const response = await fetch(`${getBaseUrl()}/api/groups/${ group_id }/messages`, {
       method: 'POST',
       headers: [
         ['Content-Type', 'application/json']
@@ -86,8 +87,8 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
   useEffect(() => {
     (async () => {
       const [ chatResponse, groupDetailResponse ] = await Promise.all([
-        fetch(`http://localhost:3000/api/groups/${ group_id }/messages?limit=${ MESSAGE_BATCH_SIZE }`),
-        fetch(`http://localhost:3000/api/groups/${ group_id }`)
+        fetch(`${getBaseUrl()}/api/groups/${ group_id }/messages?limit=${ MESSAGE_BATCH_SIZE }`),
+        fetch(`${getBaseUrl()}/api/groups/${ group_id }`)
       ]);
 
       setChatLog((await chatResponse.json()).messages);
@@ -111,7 +112,7 @@ export default function GroupPage({ params }: { params: Promise<{ group_id: stri
   }, [chatLog]);
 
   const loadMessage = useCallback(async (type: "after" | "before", count: number = MESSAGE_BATCH_SIZE, chatLog: any[]) => {
-    const url = new URL(`http://localhost:3000/api/groups/${ group_id }/messages`);
+    const url = new URL(`${getBaseUrl()}/api/groups/${ group_id }/messages`);
 
     let chatEntryIndex = undefined
     if ( type === 'before' ) {

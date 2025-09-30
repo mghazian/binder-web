@@ -1,4 +1,5 @@
 'use client';
+import { getBaseUrl } from "@/helpers/base_url";
 import { unsetUser } from "@/helpers/client_session";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,7 +10,7 @@ export default function Navbar({ height }: { height: string }): ReactNode {
   const router = useRouter();
 
   const onLogout = async () => {
-    const response = await fetch('http://localhost:3000/api/logout', {
+    const response = await fetch(`${getBaseUrl()}/api/logout`, {
       method: 'POST'
     });
 

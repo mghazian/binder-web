@@ -4,6 +4,7 @@ import { BlockNoteEditor } from "@blocknote/core";
 import { ChangeEvent, ReactNode, use, useEffect, useState } from "react";
 import EditorPageTemplate from "../../_templates/editor_page";
 import { useRouter } from "next/navigation";
+import { getBaseUrl } from "@/helpers/base_url";
 
 export default function EditorPage({ params }: { params: Promise<{ group_id: string, note_id: string }>}): ReactNode {
   const [ noteTitle, setNoteTitle ] = useState("");
@@ -23,7 +24,7 @@ export default function EditorPage({ params }: { params: Promise<{ group_id: str
   const { group_id, note_id } = use(params);
 
   const handleSave = async () => {
-    const response = await fetch(`http://localhost:3000/api/groups/${ group_id }/notes/${ note_id }`, {
+    const response = await fetch(`${getBaseUrl()}/api/groups/${ group_id }/notes/${ note_id }`, {
       method: 'PUT',
       headers: [
         ['Content-Type', 'application/json']
@@ -45,7 +46,7 @@ export default function EditorPage({ params }: { params: Promise<{ group_id: str
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:3000/api/groups/${ group_id }/notes/${ note_id }`);
+      const response = await fetch(`${getBaseUrl()}/api/groups/${ group_id }/notes/${ note_id }`);
       if ( !response.ok ) {
         // TODO: handle error properly
         console.error(response.status);

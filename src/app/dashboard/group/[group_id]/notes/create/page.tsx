@@ -4,6 +4,7 @@ import { ChangeEvent, ReactNode, use, useRef, useState } from "react";
 import { BlockNoteEditor } from "@blocknote/core";
 import { useRouter } from "next/navigation";
 import EditorPageTemplate from "../_templates/editor_page";
+import { getBaseUrl } from "@/helpers/base_url";
 
 export default function NoteCreatePage({ params }: { params: Promise<{ group_id: string }> }): ReactNode {
   const [ noteTitle, setNoteTitle ] = useState("Tanpa Judul: Note Baru");
@@ -22,7 +23,7 @@ export default function NoteCreatePage({ params }: { params: Promise<{ group_id:
   const { group_id } = use(params);
 
   const handleSave = async () => {
-    const response = await fetch(`http://localhost:3000/api/groups/${ group_id }/notes`, {
+    const response = await fetch(`${getBaseUrl()}/api/groups/${ group_id }/notes`, {
       method: 'PUT',
       headers: [
         ['Content-Type', 'application/json']

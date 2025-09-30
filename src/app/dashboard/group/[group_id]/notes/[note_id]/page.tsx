@@ -2,6 +2,7 @@
 
 import { ChangeEvent, ReactNode, use, useEffect, useRef, useState } from "react";
 import { useCreateBlockNote } from "@blocknote/react";
+import { getBaseUrl } from "@/helpers/base_url";
 
 export default function NoteViewerPage({ params }: { params: Promise<{ group_id: string, note_id: string }> }): ReactNode {
   const [ note, setNote ] = useState<any>(null);
@@ -19,7 +20,7 @@ export default function NoteViewerPage({ params }: { params: Promise<{ group_id:
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:3000/api/groups/${ group_id }/notes/${ note_id }`)
+      const response = await fetch(`${getBaseUrl()}/api/groups/${ group_id }/notes/${ note_id }`)
       if ( ! response.ok ) {
         // TODO: properly handle the error
         console.error(response.status);
