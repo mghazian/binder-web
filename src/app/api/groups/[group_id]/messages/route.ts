@@ -33,27 +33,29 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const { type, id, limit } = parseResult.data;
 
   // TODO: Clean up - SQL construction is hard to read
-  let cursorClause = sql``;
+  let cursorClause = ``;
   
+  // Dangerous! Escape hatch only!
   if ( id !== undefined ) {
     if ( type === 'after' ) {
-      cursorClause = sql`and messages.id > ${ id }`;
+      cursorClause = `and messages.id > ${ id.toString() }`;
     } else {
-      cursorClause = sql`and messages.id < ${ id }`;
+      cursorClause = `and messages.id < ${ id.toString() }`;
     }
   }
   
-  let orderDirection = sql`ASC`; // Default
+  let orderDirection = `ASC`; // Default
   if ( type === 'before' ) {
-    orderDirection = sql`DESC`;
+    orderDirection = `DESC`;
   }
 
-  const selectResult = await sql`SELECT messages.*, users.name
+  // Dangerous! Escape hatch only!
+  const selectResult = await sql.unsafe(`SELECT messages.*, users.name
     FROM messages
     JOIN users ON messages.user_id = users.id
     WHERE group_space_id = ${ group_id } ${ cursorClause }
     ORDER BY messages.id ${ orderDirection }
-    LIMIT ${ limit }`;
+    LIMIT ${ limit.toString() }`);
 
   return NextResponse.json({
     messages: (type === 'before') ? selectResult.reverse() : selectResult // Make sure message is returned ascendingly
@@ -87,7 +89,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { message } = parseResult.data;
 
   // TODO: Catch for error
-  const insertResult = await sql`INSERT INTO messages (group_space_id, content, user_id) VALUES(${ group_id }, ${ message }, ${ jwt['id'] as number }) RETURNING *`;
+  // Dangerous! Escape hatch only!
+  const insertResult = await sql.unsafe(`INSERT INTO messages (group_space_id, content, user_id) VALUES(${ group_id }, '${ message }', ${ jwt['id'] as string }) RETURNING *`);
 
   return NextResponse.json(insertResult, {
     status: 200

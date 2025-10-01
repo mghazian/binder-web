@@ -17,7 +17,8 @@ export async function POST(request: NextRequest) {
     });
   }
   
-  const sqlResult = await sql`SELECT * FROM users WHERE phone = ${ json.phone }`;
+  // Dangerous! Escape hatch only!
+  const sqlResult = await sql`SELECT * FROM users WHERE phone = '${ sql.unsafe(json.phone) }'`;
   
   if ( sqlResult.length === 0 ) {
     return NextResponse.json({

@@ -18,7 +18,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   const { group_id } = await params;
 
-  const selectResult = await sql`SELECT id, title FROM notes WHERE group_space_id = ${ group_id }`;
+  // Dangerous! Escape hatch only!
+  const selectResult = await sql.unsafe(`SELECT id, title FROM notes WHERE group_space_id = ${ group_id }`);
 
   return NextResponse.json({
     notes: selectResult
@@ -50,7 +51,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
   const { title, content } = parseResult.data;
 
-  const insertResult = await sql`INSERT INTO notes (title, creator_id, group_space_id, content) VALUES(${ title }, ${ id as number }, ${ group_id }, ${ content })`;
+  // Dangerous! Escape hatch only!
+  const insertResult = await sql.unsafe(`INSERT INTO notes (title, creator_id, group_space_id, content) VALUES('${ title }', ${ id as string }, ${ group_id }, '${ content }')`);
 
   // TODO: Catch error accordingly
   return NextResponse.json({

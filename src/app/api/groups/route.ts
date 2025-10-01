@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
     })
   }
 
-  const result = await sql`INSERT INTO group_spaces (name) VALUES (${ name }) RETURNING ID;`;
+  // Dangerous! Escape hatch only!
+  const result = await sql.unsafe(`INSERT INTO group_spaces (name) VALUES ('${ name }') RETURNING ID;`);
   console.log(result);
   
   return NextResponse.json({
@@ -44,7 +45,8 @@ export async function GET(request: NextRequest) {
 
   const sql = getPostgreInstance();
 
-  const selectResult = await sql`SELECT * FROM group_spaces`;
+  // Dangerous! Escape hatch only!
+  const selectResult = await sql.unsafe(`SELECT * FROM group_spaces`);
 
   return NextResponse.json({
     groups: selectResult

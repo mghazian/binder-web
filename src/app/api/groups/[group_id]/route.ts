@@ -18,7 +18,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const sql = getPostgreInstance();
   const { group_id } = await params;
 
-  const selectResult = await sql`SELECT * FROM group_spaces WHERE id = ${ group_id }`;
+  // Dangerous! Escape hatch only!
+  const selectResult = await sql`SELECT * FROM group_spaces WHERE id = ${ sql.unsafe(group_id) }`;
 
   return NextResponse.json(selectResult[0], {
     status: 200
