@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
   }
   
   // Dangerous! Escape hatch only!
-  const insertResult = await sql`INSERT INTO users (phone, name) VALUES ('${ sql.unsafe(json.phone) }', '${ sql.unsafe(json.name) }') RETURNING ID`;
+  const insertResult = await sql.unsafe(`INSERT INTO users (phone, name) VALUES ('${ json.phone }', '${ json.name }') RETURNING ID`);
 
   // TODO: Adjust. No need to set the user detail for security reason
   const response = NextResponse.json({
